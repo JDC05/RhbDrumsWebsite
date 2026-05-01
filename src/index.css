@@ -1,0 +1,117 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #131311;
+  color: #f1eee7;
+  overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #131311;
+}
+::-webkit-scrollbar-thumb {
+  background: #c6a667;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #f5d78e;
+}
+
+/* Gold shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -300% center;
+  }
+  100% {
+    background-position: 300% center;
+  }
+}
+
+.gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    #8b6914 0%,
+    #c6a667 20%,
+    #f5d78e 40%,
+    #c6a667 60%,
+    #8b6914 80%,
+    #c6a667 100%
+  );
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+/* Glassmorphism card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Gold glow */
+.gold-glow {
+  box-shadow: 0 0 60px rgba(198, 166, 103, 0.15), 0 0 120px rgba(198, 166, 103, 0.05);
+}
+
+/* Progress bar */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  outline: none;
+  cursor: pointer;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #c6a667;
+  cursor: pointer;
+}
+
+input[type='range']::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #c6a667;
+  cursor: pointer;
+  border: none;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .gold-shimmer {
+    animation: none;
+    background: #c6a667;
+    -webkit-text-fill-color: #c6a667;
+    background-clip: unset;
+    -webkit-background-clip: unset;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
