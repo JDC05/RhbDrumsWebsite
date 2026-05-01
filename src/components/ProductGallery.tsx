@@ -55,8 +55,29 @@ export default function ProductGallery() {
           transition={{ duration: 0.7, delay: 0.1 }}
         >
           {/* Main image */}
-          <div className="glass-card rounded-2xl p-8 mb-6 relative overflow-hidden gold-glow">
-            <div className="flex items-center justify-between mb-4">
+          <div className="glass-card rounded-2xl p-4 md:p-8 mb-6 relative overflow-hidden gold-glow">
+            <div className="relative h-72 md:h-96 overflow-hidden rounded-2xl mb-4">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={active}
+                  custom={direction}
+                  variants={variants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  <img
+                    src={products[active].src}
+                    alt={products[active].label}
+                    className="max-h-full max-w-full object-contain drop-shadow-[0_0_40px_rgba(198,166,103,0.15)]"
+                    loading="lazy"
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <div className="flex items-center justify-between">
               <button
                 onClick={() => navigate(active - 1)}
                 className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center text-cream/60 hover:text-gold hover:border-gold/50 transition-all duration-200 cursor-pointer"
@@ -65,26 +86,9 @@ export default function ProductGallery() {
                 <ChevronLeft size={20} />
               </button>
 
-              <div className="flex-1 relative h-72 md:h-96 overflow-hidden">
-                <AnimatePresence mode="wait" custom={direction}>
-                  <motion.div
-                    key={active}
-                    custom={direction}
-                    variants={variants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    className="absolute inset-0 flex items-center justify-center"
-                  >
-                    <img
-                      src={products[active].src}
-                      alt={products[active].label}
-                      className="max-h-full max-w-full object-contain drop-shadow-[0_0_40px_rgba(198,166,103,0.15)]"
-                      loading="lazy"
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+              <p className="text-cream/60 text-sm font-medium tracking-wider uppercase">
+                {products[active].label}
+              </p>
 
               <button
                 onClick={() => navigate(active + 1)}
@@ -94,10 +98,6 @@ export default function ProductGallery() {
                 <ChevronRight size={20} />
               </button>
             </div>
-
-            <p className="text-center text-cream/60 text-sm font-medium tracking-wider uppercase">
-              {products[active].label}
-            </p>
           </div>
 
           {/* Thumbnail strip */}
