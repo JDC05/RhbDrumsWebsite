@@ -4,10 +4,41 @@ import { ExternalLink, CheckCircle2 } from 'lucide-react'
 
 const CDN = 'https://d1yei2z3i6k35z.cloudfront.net/15504798/'
 
+function DiscordIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 127.14 96.36" aria-hidden="true">
+      <path
+        fill="#5865F2"
+        d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,46,96.12,53,91.08,65.69,84.69,65.69Z"
+      />
+    </svg>
+  )
+}
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+      <defs>
+        <linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#f09433" />
+          <stop offset="25%" stopColor="#e6683c" />
+          <stop offset="50%" stopColor="#dc2743" />
+          <stop offset="75%" stopColor="#cc2366" />
+          <stop offset="100%" stopColor="#bc1888" />
+        </linearGradient>
+      </defs>
+      <path
+        fill="url(#ig-grad)"
+        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+      />
+    </svg>
+  )
+}
+
 const socials = [
   {
     name: 'Discord',
-    icon: `${CDN}69d556557ca343.52382698_discordiconwithf1eee7background.png`,
+    Icon: DiscordIcon,
     label: 'JOIN OUR DISCORD SERVER',
     body: 'Connect directly with us and stay close to the ThunderDrum journey. Share ideas, give feedback, and be part of shaping the future of drumming.',
     href: 'https://discord.gg/tnm3u9cN',
@@ -15,7 +46,7 @@ const socials = [
   },
   {
     name: 'Instagram',
-    icon: `${CDN}69d556fc7693e9.01337736_instagramiconwithf1eee7background.png`,
+    Icon: InstagramIcon,
     label: 'FOLLOW US ON INSTAGRAM',
     body: 'See key moments, progress updates, and the evolution of the ThunderDrum. Get behind-the-scenes insights on our journey.',
     href: 'https://www.instagram.com/rhb_analogue_drums/',
@@ -74,12 +105,7 @@ export default function Community() {
                 transition={{ duration: 0.4 }}
                 className="mb-5"
               >
-                <img
-                  src={s.icon}
-                  alt={s.name}
-                  className="w-20 h-20 object-contain rounded-2xl"
-                  loading="lazy"
-                />
+                <s.Icon className="w-20 h-20" />
               </motion.div>
 
               <h3 className="text-gold font-bold text-sm tracking-widest uppercase mb-3">

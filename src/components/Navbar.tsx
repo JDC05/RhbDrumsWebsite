@@ -14,6 +14,9 @@ const links = [
   { label: 'Community', href: '#community' },
 ]
 
+// Navbar sits ~72px from the top of the viewport; offset so headings aren't hidden behind it
+const NAVBAR_HEIGHT = 80
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -25,10 +28,26 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    if (mobileOpen) document.body.style.overflow = 'hidden'
-    else document.body.style.overflow = ''
+    document.body.style.overflow = mobileOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [mobileOpen])
+
+  const scrollTo = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault()
+    document.body.style.overflow = ''
+    const wasOpen = mobileOpen
+    setMobileOpen(false)
+    const doScroll = () => {
+      const target = document.querySelector(href)
+      if (!target) return
+      const top = target.getBoundingClientRect().top + window.scrollY - NAVBAR_HEIGHT
+      window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
+    }
+    // Delay scroll until after the close animation (250ms) so getBoundingClientRect
+    // and window.scrollY return accurate values on mobile
+    if (wasOpen) setTimeout(doScroll, 280)
+    else doScroll()
+  }
 
   return (
     <header
@@ -40,7 +59,7 @@ export default function Navbar() {
     >
       <div className="flex items-center justify-between px-5 py-3">
         {/* Logo */}
-        <a href="#hero" className="flex items-center gap-2 cursor-pointer group">
+        <a href="#hero" onClick={(e) => scrollTo(e, '#hero')} className="flex items-center gap-2 cursor-pointer group">
           <img
             src={`${CDN}69a3381902a9a_logohammerwhite.png`}
             alt="Thunder Drums"
@@ -59,6 +78,7 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
+              onClick={(e) => scrollTo(e, link.href)}
               className="text-cream/60 hover:text-gold text-sm font-medium transition-colors duration-200 cursor-pointer"
             >
               {link.label}
@@ -70,6 +90,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <a
             href="#revolution"
+            onClick={(e) => scrollTo(e, '#revolution')}
             className="hidden sm:inline-flex items-center bg-gold text-dark text-sm font-bold px-5 py-2 rounded-full hover:bg-gold-light transition-colors duration-200 cursor-pointer"
           >
             Join Now
@@ -96,7 +117,7 @@ export default function Navbar() {
             <a
               key={link.href}
               href={link.href}
-              onClick={() => setMobileOpen(false)}
+              onClick={(e) => scrollTo(e, link.href)}
               className="text-cream/70 hover:text-gold text-base font-medium py-2 border-b border-white/5 transition-colors duration-200 cursor-pointer"
             >
               {link.label}
@@ -104,7 +125,7 @@ export default function Navbar() {
           ))}
           <a
             href="#revolution"
-            onClick={() => setMobileOpen(false)}
+            onClick={(e) => scrollTo(e, '#revolution')}
             className="mt-2 bg-gold text-dark text-sm font-bold px-5 py-3 rounded-full text-center hover:bg-gold-light transition-colors duration-200 cursor-pointer"
           >
             Join the Revolution
