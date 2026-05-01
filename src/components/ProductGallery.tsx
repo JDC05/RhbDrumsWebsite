@@ -80,6 +80,7 @@ export default function ProductGallery() {
                       src={products[active].src}
                       alt={products[active].label}
                       className="max-h-full max-w-full object-contain drop-shadow-[0_0_40px_rgba(198,166,103,0.15)]"
+                      loading="lazy"
                     />
                   </motion.div>
                 </AnimatePresence>
@@ -116,6 +117,7 @@ export default function ProductGallery() {
                   src={p.src}
                   alt={p.label}
                   className="w-full h-full object-contain bg-dark-3 p-1"
+                  loading="lazy"
                 />
               </button>
             ))}

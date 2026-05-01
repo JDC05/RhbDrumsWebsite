@@ -76,7 +76,8 @@ export default function Solution() {
           <img
             src={`${CDN}69b082e64adb1_TrueFeel.TrueSound.TrueFreedomPNG.png`}
             alt="True Feel. True Sound. True Freedom."
-            className="max-w-full mx-auto w-full max-w-xl drop-shadow-[0_0_40px_rgba(198,166,103,0.2)]"
+            className="block w-full max-w-xl mx-auto drop-shadow-[0_0_40px_rgba(198,166,103,0.2)]"
+            loading="lazy"
           />
         </motion.div>
       </div>

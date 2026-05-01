@@ -32,7 +32,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="bg-dark py-24 px-6">
+    <section id="how-it-works" className="bg-dark py-24 px-6">
       <div className="max-w-6xl mx-auto">
         <motion.div
           className="text-center mb-16"
@@ -61,7 +61,8 @@ export default function HowItWorks() {
             <img
               src={`${CDN}69b08f42da731_HowitWorksFunnel.png`}
               alt="How it Works diagram"
-              className="max-w-full w-full max-w-sm mx-auto drop-shadow-[0_0_30px_rgba(198,166,103,0.1)]"
+              className="block w-full max-w-sm mx-auto drop-shadow-[0_0_30px_rgba(198,166,103,0.1)]"
+              loading="lazy"
             />
           </motion.div>
 

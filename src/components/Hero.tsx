@@ -16,12 +16,14 @@ export default function Hero() {
 
   return (
     <section id="hero" ref={ref} className="relative h-screen min-h-[600px] overflow-hidden">
-      {/* Parallax background */}
+      {/* Parallax background — scale must be passed to Framer Motion so it composes with y */}
       <motion.div
-        className="absolute inset-0 bg-cover bg-center scale-110"
+        className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: `url(${CDN}69a74b4d7c5b6_1866719.jpg)`,
           y: bgY,
+          scale: 1.1,
+          willChange: 'transform',
         }}
       />
 
@@ -105,23 +107,27 @@ export default function Hero() {
                 src={`${CDN}69a3381902a9a_logohammerwhite.png`}
                 alt="Thunder Drums Hammer Logo"
                 className="relative w-44 md:w-64 lg:w-72 drop-shadow-[0_0_80px_rgba(198,166,103,0.35)]"
+                loading="eager"
+                fetchpriority="high"
               />
             </div>
           </motion.div>
         </div>
       </motion.div>
 
-      {/* Scroll indicator */}
-      <motion.a
-        href="#mission"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-cream/40 hover:text-gold transition-colors duration-200 cursor-pointer flex flex-col items-center gap-1"
-        animate={{ y: [0, 8, 0] }}
-        transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-        aria-label="Scroll down"
-      >
-        <span className="text-xs tracking-widest uppercase font-medium">Scroll</span>
-        <ChevronDown size={20} />
-      </motion.a>
+      {/* Scroll indicator — wrapper handles centering so Framer Motion's y transform doesn't clobber -translate-x-1/2 */}
+      <div className="absolute bottom-8 left-0 right-0 flex justify-center pointer-events-none">
+        <motion.a
+          href="#mission"
+          className="pointer-events-auto text-cream/40 hover:text-gold transition-colors duration-200 cursor-pointer flex flex-col items-center gap-1"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+          aria-label="Scroll down"
+        >
+          <span className="text-xs tracking-widest uppercase font-medium">Scroll</span>
+          <ChevronDown size={20} />
+        </motion.a>
+      </div>
     </section>
   )
 }

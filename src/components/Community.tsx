@@ -78,6 +78,7 @@ export default function Community() {
                   src={s.icon}
                   alt={s.name}
                   className="w-20 h-20 object-contain rounded-2xl"
+                  loading="lazy"
                 />
               </motion.div>
 
@@ -178,7 +179,7 @@ export default function Community() {
               />
               <motion.button
                 type="submit"
-                className="self-end bg-gold text-dark font-bold px-8 py-3 rounded-full text-base hover:bg-gold-light transition-colors duration-200 cursor-pointer shadow-lg shadow-gold/20"
+                className="w-full sm:w-auto sm:self-end bg-gold text-dark font-bold px-8 py-3 rounded-full text-base hover:bg-gold-light transition-colors duration-200 cursor-pointer shadow-lg shadow-gold/20"
                 whileHover={{ scale: 1.04 }}
                 whileTap={{ scale: 0.97 }}
               >
@@ -200,10 +201,11 @@ export default function Community() {
           <img
             src={`${CDN}69a3381902a9a_logohammerwhite.png`}
             alt="Thunder Drums"
-            className="h-10 w-auto mx-auto mb-3 opacity-60"
+            className="h-10 w-auto mx-auto mb-3 opacity-60 block"
+            loading="lazy"
           />
           <p className="text-cream/40 text-sm">
-            © 2025 RHB Analogue Drums. All rights reserved.
+            © 2026 RHB Analogue Drums. All rights reserved.
           </p>
           <p className="text-cream/30 text-xs mt-1 italic">Drumming, Liberated.</p>
         </motion.div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion, useScroll, useMotionValueEvent } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 
 const CDN = 'https://d1yei2z3i6k35z.cloudfront.net/15504798/'
@@ -15,21 +15,14 @@ const links = [
 ]
 
 export default function Navbar() {
-  const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const { scrollY } = useScroll()
 
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    const prev = scrollY.getPrevious() ?? 0
-    setScrolled(latest > 50)
-    if (latest > prev && latest > 150) {
-      setHidden(true)
-      setMobileOpen(false)
-    } else {
-      setHidden(false)
-    }
-  })
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   useEffect(() => {
     if (mobileOpen) document.body.style.overflow = 'hidden'
@@ -38,14 +31,12 @@ export default function Navbar() {
   }, [mobileOpen])
 
   return (
-    <motion.header
+    <header
       className={`fixed top-3 left-3 right-3 z-50 rounded-2xl transition-all duration-300 ${
         scrolled || mobileOpen
           ? 'bg-dark/90 backdrop-blur-xl border border-white/10 shadow-xl shadow-black/40'
           : 'bg-transparent'
       }`}
-      animate={{ y: hidden ? -120 : 0 }}
-      transition={{ duration: 0.35, ease: 'easeInOut' }}
     >
       <div className="flex items-center justify-between px-5 py-3">
         {/* Logo */}
@@ -54,6 +45,8 @@ export default function Navbar() {
             src={`${CDN}69a3381902a9a_logohammerwhite.png`}
             alt="Thunder Drums"
             className="h-8 w-auto transition-transform duration-300 group-hover:scale-110"
+            loading="eager"
+            fetchpriority="high"
           />
           <span className="text-cream font-bold text-sm tracking-widest uppercase hidden sm:block">
             Thunder Drums
@@ -118,6 +111,6 @@ export default function Navbar() {
           </a>
         </div>
       </motion.div>
-    </motion.header>
+    </header>
   )
 }

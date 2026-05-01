@@ -20,35 +20,43 @@ export default function AudioDemo() {
   const [duration, setDuration] = useState(0)
   const [volume, setVolume] = useState(0.8)
 
+  // Register audio event listeners once on mount
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
-
     const onTime = () => setCurrentTime(audio.currentTime)
     const onLoad = () => setDuration(audio.duration)
     const onEnded = () => setPlaying(false)
-
     audio.addEventListener('timeupdate', onTime)
     audio.addEventListener('loadedmetadata', onLoad)
     audio.addEventListener('ended', onEnded)
-    audio.volume = volume
-
+    audio.volume = 0.8
     return () => {
       audio.removeEventListener('timeupdate', onTime)
       audio.removeEventListener('loadedmetadata', onLoad)
       audio.removeEventListener('ended', onEnded)
     }
+  }, [])
+
+  // Update volume separately so event listeners are not re-registered
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = volume
   }, [volume])
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     const audio = audioRef.current
     if (!audio) return
     if (playing) {
       audio.pause()
+      setPlaying(false)
     } else {
-      audio.play().catch(() => {})
+      try {
+        await audio.play()
+        setPlaying(true)
+      } catch {
+        // Autoplay blocked by browser policy
+      }
     }
-    setPlaying((v) => !v)
   }
 
   const seek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,15 +68,13 @@ export default function AudioDemo() {
   }
 
   const changeVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const v = Number(e.target.value)
-    setVolume(v)
-    if (audioRef.current) audioRef.current.volume = v
+    setVolume(Number(e.target.value))
   }
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0
 
   return (
-    <section className="bg-dark-2 py-24 px-6">
+    <section id="audio-demo" className="bg-dark-2 py-24 px-6">
       <div className="max-w-3xl mx-auto">
         <motion.div
           className="text-center mb-12"
@@ -105,6 +111,7 @@ export default function AudioDemo() {
               src={WAVEFORM_SRC}
               alt="Audio waveform - Floor Tom prototype recording"
               className="w-full object-cover opacity-80"
+              loading="lazy"
             />
           </div>
 
