@@ -94,10 +94,10 @@ export default function Community() {
               target="_blank"
               rel="noopener noreferrer"
               className="glass-card rounded-2xl p-8 flex flex-col items-center text-center group cursor-pointer hover:border-gold/20 transition-all duration-300"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
+              initial={{ opacity: 0, scale: 0.96 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.45, delay: i * 0.07, ease: 'easeOut' }}
               whileHover={{ y: -6 }}
             >
               <motion.div

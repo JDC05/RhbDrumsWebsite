@@ -24,16 +24,6 @@ const features = [
   },
 ]
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12 } },
-}
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
-}
-
 export default function Features() {
   return (
     <section id="features" className="bg-dark-2 py-24 px-6">
@@ -53,19 +43,16 @@ export default function Features() {
           </h2>
         </motion.div>
 
-        <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 gap-6"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           {features.map((f, i) => {
             const Icon = f.icon
             return (
               <motion.div
                 key={i}
-                variants={cardVariants}
+                initial={{ opacity: 0, scale: 0.96 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.25 }}
+                transition={{ duration: 0.45, delay: i * 0.07, ease: 'easeOut' }}
                 className="glass-card rounded-2xl p-8 group hover:border-gold/20 transition-all duration-300 cursor-default"
                 whileHover={{ y: -4 }}
               >
@@ -79,7 +66,7 @@ export default function Features() {
               </motion.div>
             )
           })}
-        </motion.div>
+        </div>
       </div>
     </section>
   )
