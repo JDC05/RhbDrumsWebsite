@@ -3,13 +3,6 @@
   publish = "dist"
   functions = "netlify/functions"
 
-# Route /api/subscribe to the function before the SPA catch-all
-[[redirects]]
-  from = "/api/subscribe"
-  to = "/.netlify/functions/subscribe"
-  status = 200
-  force = true
-
 # SPA fallback
 [[redirects]]
   from = "/*"
