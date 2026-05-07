@@ -44,15 +44,13 @@ export default async (req) => {
 
   // Step 2: patch name + phone onto the contact we just got back
   const fields = [];
+  if (firstName) fields.push({ slug: 'first_name', value: firstName });
+  if (lastName) fields.push({ slug: 'last_name', value: lastName });
   if (phoneNumber) fields.push({ slug: 'phone_number', value: phoneNumber });
 
-  const patchBody = {
-    ...(firstName && { firstName }),
-    ...(lastName && { lastName }),
-    ...(fields.length && { fields }),
-  };
+  const patchBody = { fields };
 
-  if (Object.keys(patchBody).length === 0) {
+  if (fields.length === 0) {
     return new Response(JSON.stringify(contact), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
