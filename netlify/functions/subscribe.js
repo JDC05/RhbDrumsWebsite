@@ -45,7 +45,7 @@ export default async (req) => {
   // Step 2: patch name + phone onto the contact we just got back
   const fields = [];
   if (firstName) fields.push({ slug: 'first_name', value: firstName });
-  if (lastName) fields.push({ slug: 'last_name', value: lastName });
+  if (lastName) fields.push({ slug: 'surname', value: lastName });
   if (phoneNumber) fields.push({ slug: 'phone_number', value: phoneNumber });
 
   const patchBody = { fields };
