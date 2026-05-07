@@ -6,9 +6,9 @@ export default async (req) => {
     });
   }
 
-  let email, firstName, surname, feedback;
+  let email, firstName, surname, phoneNumber, feedback;
   try {
-    ({ email, firstName, surname, feedback } = await req.json());
+    ({ email, firstName, surname, phoneNumber, feedback } = await req.json());
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
       status: 400,
@@ -24,8 +24,9 @@ export default async (req) => {
   }
 
   const body = { email };
-  if (firstName) body.firstName = firstName;
+  if (firstName) body.first_name = firstName;
   if (surname) body.surname = surname;
+  if (phoneNumber) body.phone_number = phoneNumber;
   console.log('Sending to Systeme.io:', JSON.stringify(body));
 
   const res = await fetch('https://api.systeme.io/api/contacts', {
