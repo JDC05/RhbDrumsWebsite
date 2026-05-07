@@ -6,9 +6,9 @@ export default async (req) => {
     });
   }
 
-  let email, firstName, feedback;
+  let email, firstName, surname, feedback;
   try {
-    ({ email, firstName, feedback } = await req.json());
+    ({ email, firstName, surname, feedback } = await req.json());
   } catch {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
       status: 400,
@@ -25,7 +25,7 @@ export default async (req) => {
 
   const body = { email };
   if (firstName) body.firstName = firstName;
-  if (feedback) body.fields = [{ slug: 'feedback', value: feedback }];
+  if (surname) body.surname = surname;
 
   const res = await fetch('https://api.systeme.io/api/contacts', {
     method: 'POST',

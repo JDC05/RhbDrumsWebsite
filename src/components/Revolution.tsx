@@ -22,11 +22,37 @@ const itemVariants = {
 
 export default function Revolution() {
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
   const [form, setForm] = useState({ name: '', email: '', phone: '' })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSubmitted(true)
+    setSubmitting(true)
+    setError('')
+
+    const [firstName, ...rest] = form.name.trim().split(' ')
+    const surname = rest.join(' ') || undefined
+
+    try {
+      const res = await fetch('/.netlify/functions/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email, firstName, surname }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        setError(data?.detail || 'Something went wrong. Please try again.')
+        return
+      }
+
+      setSubmitted(true)
+    } catch {
+      setError('Network error. Please check your connection and try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -184,13 +210,18 @@ export default function Revolution() {
                     />
                   </div>
 
+                  {error && (
+                    <p className="text-red-400 text-sm">{error}</p>
+                  )}
+
                   <motion.button
                     type="submit"
-                    className="mt-2 w-full bg-gold text-dark font-bold py-4 rounded-full text-base hover:bg-gold-light transition-colors duration-200 cursor-pointer shadow-lg shadow-gold/20"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    disabled={submitting}
+                    className="mt-2 w-full bg-gold text-dark font-bold py-4 rounded-full text-base hover:bg-gold-light transition-colors duration-200 cursor-pointer shadow-lg shadow-gold/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                    whileHover={{ scale: submitting ? 1 : 1.02 }}
+                    whileTap={{ scale: submitting ? 1 : 0.98 }}
                   >
-                    SIGN UP
+                    {submitting ? 'Signing up…' : 'SIGN UP'}
                   </motion.button>
 
                   <p className="text-center text-cream/35 text-xs mt-1">
