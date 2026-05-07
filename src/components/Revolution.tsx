@@ -38,7 +38,7 @@ export default function Revolution() {
       const res = await fetch('/.netlify/functions/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: form.email, firstName, surname, phoneNumber: form.phone || undefined }),
+        body: JSON.stringify({ email: form.email, firstName, surname }),
       })
 
       if (!res.ok) {
