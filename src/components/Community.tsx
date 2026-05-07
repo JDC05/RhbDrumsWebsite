@@ -57,10 +57,35 @@ const socials = [
 export default function Community() {
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(false)
   const [feedback, setFeedback] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [email, setEmail] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleFeedback = (e: React.FormEvent) => {
+  const handleFeedback = async (e: React.FormEvent) => {
     e.preventDefault()
-    setFeedbackSubmitted(true)
+    setSubmitting(true)
+    setError('')
+
+    try {
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, firstName, feedback }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        setError(data?.message || 'Something went wrong. Please try again.')
+        return
+      }
+
+      setFeedbackSubmitted(true)
+    } catch {
+      setError('Network error. Please check your connection and try again.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -191,25 +216,51 @@ export default function Community() {
             </motion.div>
           ) : (
             <form onSubmit={handleFeedback} className="flex flex-col gap-4">
-              <label htmlFor="feedback" className="sr-only">
-                Your feedback
-              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="firstName" className="sr-only">First name</label>
+                  <input
+                    id="firstName"
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="First name"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-cream placeholder-cream/30 text-base focus:outline-none focus:border-gold/60 focus:ring-1 focus:ring-gold/30 transition-all duration-200"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="sr-only">Email address</label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="Email address *"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-cream placeholder-cream/30 text-base focus:outline-none focus:border-gold/60 focus:ring-1 focus:ring-gold/30 transition-all duration-200"
+                  />
+                </div>
+              </div>
+              <label htmlFor="feedback" className="sr-only">Your feedback</label>
               <textarea
                 id="feedback"
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
-                required
                 rows={5}
                 placeholder="Tell us what excites you most about the ThunderDrum — the compact size, pure analogue sound, no microphone setup, or something else entirely..."
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-cream placeholder-cream/30 text-base focus:outline-none focus:border-gold/60 focus:ring-1 focus:ring-gold/30 transition-all duration-200 resize-none"
               />
+              {error && (
+                <p className="text-red-400 text-sm">{error}</p>
+              )}
               <motion.button
                 type="submit"
-                className="w-full sm:w-auto sm:self-end bg-gold text-dark font-bold px-8 py-3 rounded-full text-base hover:bg-gold-light transition-colors duration-200 cursor-pointer shadow-lg shadow-gold/20"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
+                disabled={submitting}
+                className="w-full sm:w-auto sm:self-end bg-gold text-dark font-bold px-8 py-3 rounded-full text-base hover:bg-gold-light transition-colors duration-200 cursor-pointer shadow-lg shadow-gold/20 disabled:opacity-60 disabled:cursor-not-allowed"
+                whileHover={{ scale: submitting ? 1 : 1.04 }}
+                whileTap={{ scale: submitting ? 1 : 0.97 }}
               >
-                Send Feedback
+                {submitting ? 'Sending…' : 'Send Feedback'}
               </motion.button>
             </form>
           )}
