@@ -32,13 +32,13 @@ export default function Revolution() {
     setError('')
 
     const [firstName, ...rest] = form.name.trim().split(' ')
-    const surname = rest.join(' ') || undefined
+    const lastName = rest.join(' ') || undefined
 
     try {
       const res = await fetch('/.netlify/functions/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: form.email, firstName, surname, phoneNumber: form.phone || undefined }),
+        body: JSON.stringify({ email: form.email, firstName, lastName, phoneNumber: form.phone || undefined }),
       })
 
       if (!res.ok) {
