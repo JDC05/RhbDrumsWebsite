@@ -25,7 +25,8 @@ export default async (req) => {
 
   const body = { email };
   if (firstName) body.firstName = firstName;
-  if (feedback) body.fields = [{ slug: 'feedback', value: feedback }];
+
+  console.log('[subscribe] Sending to Systeme.io:', JSON.stringify(body));
 
   const res = await fetch('https://api.systeme.io/api/contacts', {
     method: 'POST',
@@ -37,6 +38,8 @@ export default async (req) => {
   });
 
   const data = await res.json();
+
+  console.log('[subscribe] Systeme.io response:', res.status, JSON.stringify(data));
 
   return new Response(JSON.stringify(data), {
     status: res.status,
