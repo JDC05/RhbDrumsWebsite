@@ -23,10 +23,15 @@ export default async (req) => {
     });
   }
 
-  const body = { email };
-  if (firstName) body.firstName = firstName;
-  if (lastName) body.lastName = lastName;
-  if (phoneNumber) body.phoneNumber = phoneNumber;
+  const fields = [];
+  if (phoneNumber) fields.push({ slug: 'phone_number', value: phoneNumber });
+
+  const body = {
+    email,
+    ...(firstName && { firstName }),
+    ...(lastName && { lastName }),
+    ...(fields.length && { fields }),
+  };
   console.log('Sending to Systeme.io:', JSON.stringify(body));
 
   const res = await fetch('https://api.systeme.io/api/contacts', {
