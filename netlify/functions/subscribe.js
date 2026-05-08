@@ -1,6 +1,6 @@
 export default async (req) => {
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+    return new Response(JSON.stringify({ detail: 'Method not allowed.' }), {
       status: 405,
       headers: { 'Content-Type': 'application/json' },
     });
@@ -10,37 +10,98 @@ export default async (req) => {
   try {
     ({ email, firstName, lastName, phoneNumber } = await req.json());
   } catch {
-    return new Response(JSON.stringify({ error: 'Invalid JSON' }), {
+    return new Response(JSON.stringify({ detail: 'Invalid request.' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
-  if (!email) {
-    return new Response(JSON.stringify({ error: 'Email is required' }), {
+  // Trim all fields
+  email = email?.trim();
+  firstName = firstName?.trim();
+  lastName = lastName?.trim();
+  phoneNumber = phoneNumber?.trim();
+
+  // Validate required fields
+  if (!email || !firstName || !lastName || !phoneNumber) {
+    return new Response(JSON.stringify({ detail: 'All fields are required.' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  // Basic email format check
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return new Response(JSON.stringify({ detail: 'Please enter a valid email address.' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
   const apiKey = process.env.SYSTEME_API_KEY;
+  if (!apiKey) {
+    console.error('SYSTEME_API_KEY is not configured');
+    return new Response(JSON.stringify({ detail: 'Server error. Please try again later.' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
-  const fields = [];
-  if (firstName) fields.push({ slug: 'first_name', value: firstName });
-  if (lastName) fields.push({ slug: 'surname', value: lastName });
-  if (phoneNumber) fields.push({ slug: 'phone_number', value: phoneNumber });
+  const fields = [
+    { slug: 'first_name', value: firstName },
+    { slug: 'surname', value: lastName },
+    { slug: 'phone_number', value: phoneNumber },
+  ];
 
-  const createRes = await fetch('https://api.systeme.io/api/contacts', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
-    body: JSON.stringify({ email, fields }),
-  });
+  let createRes, contact;
+  try {
+    createRes = await fetch('https://api.systeme.io/api/contacts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
+      body: JSON.stringify({ email, fields }),
+    });
+    contact = await createRes.json();
+  } catch (err) {
+    console.error('Systeme.io request failed:', err);
+    return new Response(JSON.stringify({ detail: 'Could not reach our signup service. Please try again later.' }), {
+      status: 502,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
-  const contact = await createRes.json();
-  console.log('POST status:', createRes.status, JSON.stringify(contact));
+  console.log('Systeme.io POST status:', createRes.status, JSON.stringify(contact));
+
+  if (createRes.status === 422) {
+    const isDuplicateEmail = contact?.violations?.some(v => v.propertyPath === 'email');
+    if (isDuplicateEmail) {
+      return new Response(
+        JSON.stringify({ detail: 'This email is already registered. Check your inbox for updates from us!' }),
+        { status: 409, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+    return new Response(JSON.stringify({ detail: 'Please check your details and try again.' }), {
+      status: 422,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  if (createRes.status === 429) {
+    return new Response(JSON.stringify({ detail: 'Too many requests. Please wait a moment and try again.' }), {
+      status: 429,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  if (!createRes.ok) {
+    console.error('Systeme.io unexpected error:', createRes.status, JSON.stringify(contact));
+    return new Response(JSON.stringify({ detail: 'Something went wrong. Please try again.' }), {
+      status: createRes.status,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
   return new Response(JSON.stringify(contact), {
-    status: createRes.ok ? 200 : createRes.status,
+    status: 200,
     headers: { 'Content-Type': 'application/json' },
   });
 };
