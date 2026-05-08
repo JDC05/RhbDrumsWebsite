@@ -124,8 +124,7 @@ export default function AudioDemo() {
               <span className="text-cream/50 text-xs font-mono w-10 text-right shrink-0">
                 {formatTime(currentTime)}
               </span>
-              <div className="flex-1 relative">
-                <div className="absolute inset-y-0 left-0 rounded-full bg-gold/50 pointer-events-none" style={{ width: `${progress}%` }} />
+              <div className="flex-1">
                 <input
                   type="range"
                   min={0}
@@ -133,7 +132,7 @@ export default function AudioDemo() {
                   step={0.01}
                   value={currentTime}
                   onChange={seek}
-                  className="relative w-full cursor-pointer"
+                  className="w-full cursor-pointer"
                   aria-label="Seek"
                   style={{
                     background: `linear-gradient(to right, #C6A667 ${progress}%, rgba(255,255,255,0.15) ${progress}%)`,
