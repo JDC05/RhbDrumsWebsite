@@ -72,11 +72,16 @@ export default async (req) => {
   console.log('Systeme.io POST status:', createRes.status, JSON.stringify(contact));
 
   if (createRes.status === 422) {
-    const isDuplicateEmail = contact?.violations?.some(v => v.propertyPath === 'email');
-    if (isDuplicateEmail) {
+    const emailViolation = contact?.violations?.find(v => v.propertyPath === 'email');
+    if (emailViolation) {
+      const isDuplicate = emailViolation.message?.toLowerCase().includes('already');
       return new Response(
-        JSON.stringify({ detail: 'This email is already registered. Check your inbox for updates from us!' }),
-        { status: 409, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify({
+          detail: isDuplicate
+            ? 'This email is already registered. Check your inbox for updates from us!'
+            : 'Please enter a valid email address.',
+        }),
+        { status: isDuplicate ? 409 : 422, headers: { 'Content-Type': 'application/json' } }
       );
     }
     return new Response(JSON.stringify({ detail: 'Please check your details and try again.' }), {
